@@ -1,0 +1,32 @@
+{{--
+  Fields shared by the create and edit user forms. Pass `user` when
+  editing an existing user.
+--}}
+@let(currentRole = old('role') || (user ? user.role : 'user'))
+
+@field.root({ name: 'fullName' })
+  @!field.label({ text: 'Celé jméno' })
+  @!input.control({ value: user ? user.fullName : '', placeholder: 'Jan Novák' })
+  @!field.error()
+@end
+@field.root({ name: 'email' })
+  @!field.label({ text: 'E-mail' })
+  @!input.control({ type: 'email', value: user ? user.email : '', placeholder: 'jan@example.com' })
+  @!field.error()
+@end
+@field.root({ name: 'password' })
+  @!field.label({ text: user ? 'Nové heslo (nechte prázdné, pokud ho neměníte)' : 'Heslo' })
+  @!input.control({ type: 'password', autocomplete: 'new-password', placeholder: '••••••••' })
+  @!field.error()
+@end
+@field.root({ name: 'role' })
+  @!field.label({ text: 'Role' })
+  @!select.control({
+    class: 'field__input',
+    options: [
+      { value: 'user', name: 'Uživatel', isSelected: currentRole === 'user' },
+      { value: 'admin', name: 'Administrátor', isSelected: currentRole === 'admin' },
+    ],
+  })
+  @!field.error()
+@end

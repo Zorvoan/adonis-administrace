@@ -1,0 +1,52 @@
+@layouts.app({ title: 'Uživatelé' })
+  @page({ title: 'Správa uživatelů', description: 'Seznam všech účtů v aplikaci.' })
+    @slot('actions')
+      @link({ route: 'admin.users.create', class: 'btn btn--primary' })
+        @svg('lucide:user-plus', { width: 15, height: 15 })
+        Nový uživatel
+      @end
+    @end
+
+    <div class="panel panel--flush">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Jméno</th>
+            <th>E-mail</th>
+            <th>Role</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(user in users)
+            <tr>
+              <td>{{ user.fullName || '—' }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.isAdmin ? 'Administrátor' : 'Uživatel' }}</td>
+              <td class="table__actions">
+                @link({
+                  route: 'admin.users.edit',
+                  routeParams: { id: user.id },
+                  class: 'btn btn--secondary btn--sm',
+                })
+                  Upravit
+                @end
+                @if(user.id !== auth.user.id)
+                  @form({
+                    route: 'admin.users.destroy',
+                    routeParams: { id: user.id },
+                    class: 'inline-form',
+                    'x-data': '',
+                    'x-on:submit': "if (!confirm('Opravdu smazat tohoto uživatele?')) $event.preventDefault()",
+                  })
+                    <button type="submit" class="btn btn--danger btn--sm">Smazat</button>
+                  @end
+                @end
+              </td>
+            </tr>
+          @end
+        </tbody>
+      </table>
+    </div>
+  @end
+@end
